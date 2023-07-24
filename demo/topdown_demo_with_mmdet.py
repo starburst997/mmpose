@@ -8,6 +8,7 @@ import cv2
 import json_tricks as json
 import mmcv
 import mmengine
+import torch
 import numpy as np
 
 from mmpose.apis import inference_topdown
@@ -174,16 +175,21 @@ def main():
         args.pred_save_path = f'{args.output_root}/results_' \
             f'{os.path.splitext(os.path.basename(args.input))[0]}.json'
 
+    if not torch.cuda.is_available():
+        device = 'cpu'
+    else:
+        device = args.device
+
     # build detector
     detector = init_detector(
-        args.det_config, args.det_checkpoint, device=args.device)
+        args.det_config, args.det_checkpoint, device=device)
     detector.cfg = adapt_mmdet_pipeline(detector.cfg)
 
     # build pose estimator
     pose_estimator = init_pose_estimator(
         args.pose_config,
         args.pose_checkpoint,
-        device=args.device,
+        device=device,
         cfg_options=dict(
             model=dict(test_cfg=dict(output_heatmaps=args.draw_heatmap))))
 
