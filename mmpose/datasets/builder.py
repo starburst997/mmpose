@@ -17,7 +17,7 @@ if platform.system() != 'Windows':
     base_soft_limit = rlimit[0]
     hard_limit = rlimit[1]
     soft_limit = min(max(4096, base_soft_limit), hard_limit)
-    resource.setrlimit(resource.RLIMIT_NOFILE, (soft_limit, hard_limit))
+    #resource.setrlimit(resource.RLIMIT_NOFILE, (soft_limit, hard_limit))
 
 
 def _concat_dataset(cfg, default_args=None):
